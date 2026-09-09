@@ -4,6 +4,7 @@
   "description": "subabase.yuufa.com",
   "main": "index.js",
   "scripts": {
+    "gen:types": "supabase gen types typescript --project-id \"urzwrzrkhtryrhejapku\" > ./types/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
