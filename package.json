@@ -1,0 +1,16 @@
+{
+  "name": "supabase",
+  "version": "1.0.0",
+  "description": "subabase.yuufa.com",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "work",
+  "license": "ISC",
+  "devDependencies": {
+    "@supabase/cli": "^1.0.0",
+    "supabase": "^2.117.0"
+  }
+}
