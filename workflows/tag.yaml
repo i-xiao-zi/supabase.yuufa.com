@@ -1,0 +1,47 @@
+name: 保持仓库活跃
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+concurrency:
+  group: auto-tag-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0        # 必须，否则拿不到历史 tag
+
+      - name: Bump version & push tag
+        id: bump
+        run: |
+          # 取最新 tag（按版本号排序）
+          latest=$(git tag --sort=-v:refname | head -n 1)
+          echo "latest tag: ${latest:-<none>}"
+
+          if [ -z "$latest" ]; then
+            new="v1.0.0"
+          else
+            ver=${latest#v}                      # 去掉 v 前缀
+            IFS='.' read -r major minor patch <<< "$ver"
+            patch=$((patch + 1))                 # 小版本 +1
+            new="v${major}.${minor}.${patch}"
+          fi
+
+          echo "new tag: $new"
+          git tag "$new"
+          git push origin "$new"
+          echo "tag=$new" >> "$GITHUB_OUTPUT"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.bump.outputs.tag }}
+          generate_release_notes: true
